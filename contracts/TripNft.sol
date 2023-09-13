@@ -47,7 +47,7 @@ contract TripNft is ERC1155, Ownable2Step {
     function mint(address to, uint256 vehicleNode) public onlyOwner {
         require(
             vehicleIdProxy.ownerOf(vehicleNode) == to,
-            "TripNft01: invalid owner"
+            "TripNft: invalid owner"
         );
 
         _mint(to, vehicleNode, 1, "");
