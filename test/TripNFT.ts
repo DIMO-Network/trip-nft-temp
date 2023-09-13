@@ -1,23 +1,17 @@
-import { expect } from "chai";
-import { ethers } from "hardhat";
+const { expect } = require("chai");
+const { ethers } = require("hardhat");
+const { expectEvent, expectRevert } = require("@openzeppelin/test-helpers");
 
-interface SegmentData {
-  start: number;
-  end: number;
-  startHex: string;
-  endHex: string;
-}
+/**
+ * npx hardhat test ./test/TripNft.js
+ */
+describe("TripNft Unit Tests", async function () {
+  it("get name", async () => {
+    const TripNft = await ethers.getContractFactory("TripNft");
+    const [arbitraryUser] = await ethers.getSigners();
+    const tripNft = await TripNft.deploy(arbitraryUser.address);
 
-describe("trip_nft_contract", function () {
-  it("need to break this up", async function () {
-    const [owner, user] = await ethers.getSigners();
-    const vehicleTrips = await ethers.deployContract("VehicleTrips");
-
-    var data: SegmentData = { start: 10, end: 20, startHex: "a", endHex: "b" };
-    let dataB = Buffer.from(JSON.stringify(data));
-
-    await expect(vehicleTrips.mintSegment(user.address, 1, 1, dataB))
-      .to.emit(vehicleTrips, `NewSegmentMinted`)
-      .withArgs(user.address, 1, 1, dataB);
+    const output = await tripNft.name();
+    console.log("output: ", output);
   });
 });
