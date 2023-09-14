@@ -15,7 +15,7 @@ interface INft {
     function ownerOf(uint256 tokenId) external view returns (address);
 }
 
-contract TripNft is ERC1155, Ownable2Step {
+contract TripNft01 is ERC1155, Ownable2Step {
     string public name;
 
     mapping(uint256 => string) private _idToUri;
@@ -23,8 +23,14 @@ contract TripNft is ERC1155, Ownable2Step {
     INft public vehicleIdProxy;
     address vehicleIdProxyAddr;
 
+    event SegmentMinted(
+        address indexed owner,
+        uint256 indexed vehicleNode,
+        uint256 segmentNum
+    );
+
     constructor(address vehicleIdProxyAddress) {
-        name = "TripNft";
+        name = "TripNft01";
         require(
             vehicleIdProxyAddress != address(0),
             "vehicleNftAddress is an invalid zero address"
@@ -45,11 +51,12 @@ contract TripNft is ERC1155, Ownable2Step {
      * @param vehicleNode vehicle node to mint for
      */
     function mint(address to, uint256 vehicleNode) public onlyOwner {
-        require(
-            vehicleIdProxy.ownerOf(vehicleNode) == to,
-            "TripNft: invalid owner"
-        );
+        // require(
+        //     vehicleIdProxy.ownerOf(vehicleNode) == to,
+        //     "TripNft01: invalid owner"
+        // );
 
         _mint(to, vehicleNode, 1, "");
+        emit SegmentMinted(to, vehicleNode, balanceOf[to][vehicleNode]);
     }
 }
