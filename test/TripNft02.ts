@@ -28,6 +28,7 @@ describe("TripNft02 Unit Tests", async function () {
     const tripNft02 = await TripNft02.deploy();
 
     const vehicleNode = 1;
+    const tripNum = 0;
 
     var data: SegmentInfo = {
       startHex: "8843a13687fffff",
@@ -35,7 +36,7 @@ describe("TripNft02 Unit Tests", async function () {
       bundlrId: "randomStringBundlrId",
       owner: user.address,
       vehicleNode: vehicleNode,
-      tripNum: 0,
+      tripNum: tripNum,
     };
 
     await expect(
@@ -51,11 +52,28 @@ describe("TripNft02 Unit Tests", async function () {
       .withArgs(
         vehicleNode,
         user.address,
-        0,
+        data.tripNum,
         data.startHex,
         data.endHex,
         data.bundlrId
       );
+  });
+  it("stored trip info", async () => {
+    const TripNft02 = await ethers.getContractFactory("TripNft02");
+    const [user] = await ethers.getSigners();
+    const tripNft02 = await TripNft02.deploy();
+
+    const vehicleNode = 1;
+    const tripNum = 0;
+
+    var data: SegmentInfo = {
+      startHex: "8843a13687fffff",
+      endHex: "8843a13687fffff",
+      bundlrId: "randomStringBundlrId",
+      owner: user.address,
+      vehicleNode: vehicleNode,
+      tripNum: tripNum,
+    };
 
     await expect(
       tripNft02.mint(
@@ -70,14 +88,23 @@ describe("TripNft02 Unit Tests", async function () {
       .withArgs(
         vehicleNode,
         user.address,
-        1,
+        data.tripNum,
         data.startHex,
         data.endHex,
         data.bundlrId
       );
 
     const tripId = await tripNft02.tripTokenId();
-    const segInfo = await tripNft02.getSegmentInfo(vehicleNode, tripId);
-    console.log(segInfo);
+    const segInfo: SegmentInfo = await tripNft02.getSegmentInfo(
+      vehicleNode,
+      tripId
+    );
+
+    expect(segInfo.vehicleNode).to.equal(data.vehicleNode);
+    expect(segInfo.owner).to.equal(data.owner);
+    expect(segInfo.tripNum).to.equal(data.tripNum);
+    expect(segInfo.startHex).to.equal(data.startHex);
+    expect(segInfo.endHex).to.equal(data.endHex);
+    expect(segInfo.bundlrId).to.equal(data.bundlrId);
   });
 });
