@@ -4,8 +4,10 @@ const { ethers } = require("hardhat");
 interface SegmentInfo {
   vehicleNode: number;
   owner: string;
-  startHex: string;
-  endHex: string;
+  startHex: number;
+  endHex: number;
+  startTime: number;
+  endTime: number;
   bundlrId: string;
   tripNum: number;
 }
@@ -31,8 +33,10 @@ describe("TripNft02 Unit Tests", async function () {
     const tripNum = 0;
 
     var data: SegmentInfo = {
-      startHex: "8843a13687fffff",
-      endHex: "8843a13687fffff",
+      startHex: 854775808,
+      endHex: 854775909,
+      startTime: 1694760002,
+      endTime: 1694760012,
       bundlrId: "randomStringBundlrId",
       owner: user.address,
       vehicleNode: vehicleNode,
@@ -45,6 +49,8 @@ describe("TripNft02 Unit Tests", async function () {
         vehicleNode,
         data.startHex,
         data.endHex,
+        data.startTime,
+        data.endTime,
         data.bundlrId
       )
     )
@@ -52,10 +58,11 @@ describe("TripNft02 Unit Tests", async function () {
       .withArgs(
         vehicleNode,
         user.address,
-        data.tripNum,
+        data.bundlrId,
         data.startHex,
         data.endHex,
-        data.bundlrId
+        data.startTime,
+        data.endTime
       );
   });
   it("stored trip info", async () => {
@@ -64,11 +71,13 @@ describe("TripNft02 Unit Tests", async function () {
     const tripNft02 = await TripNft02.deploy();
 
     const vehicleNode = 1;
-    const tripNum = 0;
+    const tripNum = 1;
 
     var data: SegmentInfo = {
-      startHex: "8843a13687fffff",
-      endHex: "8843a13687fffff",
+      startHex: 854775808,
+      endHex: 854775909,
+      startTime: 1694760002,
+      endTime: 1694760012,
       bundlrId: "randomStringBundlrId",
       owner: user.address,
       vehicleNode: vehicleNode,
@@ -81,6 +90,8 @@ describe("TripNft02 Unit Tests", async function () {
         vehicleNode,
         data.startHex,
         data.endHex,
+        data.startTime,
+        data.endTime,
         data.bundlrId
       )
     )
@@ -88,17 +99,15 @@ describe("TripNft02 Unit Tests", async function () {
       .withArgs(
         vehicleNode,
         user.address,
-        data.tripNum,
+        data.bundlrId,
         data.startHex,
         data.endHex,
-        data.bundlrId
+        data.startTime,
+        data.endTime
       );
 
     const tripId = await tripNft02.tripTokenId();
-    const segInfo: SegmentInfo = await tripNft02.getSegmentInfo(
-      vehicleNode,
-      tripId
-    );
+    const segInfo: SegmentInfo = await tripNft02.getSegmentInfo(tripId);
 
     expect(segInfo.vehicleNode).to.equal(data.vehicleNode);
     expect(segInfo.owner).to.equal(data.owner);
