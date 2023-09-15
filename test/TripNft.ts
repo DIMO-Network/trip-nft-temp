@@ -15,21 +15,21 @@ interface HexTime {
   time: number;
 }
 /**
- * npx hardhat test ./test/TripNft02.js
+ * npx hardhat test ./test/TripNft.js
  */
-describe("TripNft02 Unit Tests", async function () {
+describe("TripNft Unit Tests", async function () {
   it("get name", async () => {
-    const TripNft02 = await ethers.getContractFactory("TripNft02");
-    const tripNft02 = await TripNft02.deploy();
+    const TripNft = await ethers.getContractFactory("TripNft");
+    const tripNft02 = await TripNft.deploy();
 
     const output = await tripNft02.name();
     console.log("output: ", output);
   });
 
   it("mint trip", async () => {
-    const TripNft02 = await ethers.getContractFactory("TripNft02");
+    const TripNft = await ethers.getContractFactory("TripNft");
     const [user] = await ethers.getSigners();
-    const tripNft02 = await TripNft02.deploy();
+    const tripNft = await TripNft.deploy();
 
     const vehicleNode = 1;
     const tripTokenId = 1;
@@ -50,7 +50,7 @@ describe("TripNft02 Unit Tests", async function () {
     };
 
     await expect(
-      tripNft02.mint(
+      tripNft.mint(
         data.owner,
         data.vehicleNode,
         data.start.time,
@@ -60,7 +60,7 @@ describe("TripNft02 Unit Tests", async function () {
         data.bundlrId
       )
     )
-      .to.emit(tripNft02, "SegmentMinted")
+      .to.emit(tripNft, "SegmentMinted")
       .withArgs(
         data.vehicleNode,
         data.tokenId,
@@ -73,9 +73,9 @@ describe("TripNft02 Unit Tests", async function () {
       );
   });
   it("stored trip info", async () => {
-    const TripNft02 = await ethers.getContractFactory("TripNft02");
+    const TripNft = await ethers.getContractFactory("TripNft");
     const [user] = await ethers.getSigners();
-    const tripNft02 = await TripNft02.deploy();
+    const tripNft = await TripNft.deploy();
 
     const vehicleNode = 1;
     const tripTokenId = 1;
@@ -96,7 +96,7 @@ describe("TripNft02 Unit Tests", async function () {
     };
 
     await expect(
-      tripNft02.mint(
+      tripNft.mint(
         data.owner,
         data.vehicleNode,
         data.start.time,
@@ -106,7 +106,7 @@ describe("TripNft02 Unit Tests", async function () {
         data.bundlrId
       )
     )
-      .to.emit(tripNft02, "SegmentMinted")
+      .to.emit(tripNft, "SegmentMinted")
       .withArgs(
         data.vehicleNode,
         data.tokenId,
@@ -118,8 +118,8 @@ describe("TripNft02 Unit Tests", async function () {
         data.end.hexIndex
       );
 
-    const tripId = await tripNft02.tripTokenId();
-    const segInfo: SegmentInfo = await tripNft02.getSegmentInfo(tripId);
+    const tripId = await tripNft.tripTokenId();
+    const segInfo: SegmentInfo = await tripNft.getSegmentInfo(tripId);
 
     expect(segInfo.vehicleNode).to.equal(data.vehicleNode);
     expect(segInfo.tokenId).to.equal(data.tokenId);
