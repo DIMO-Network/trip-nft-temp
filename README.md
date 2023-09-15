@@ -1,13 +1,13 @@
 # Sample Hardhat Project
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a script that deploys that contract.
+To generate abi and go file from root:
 
-Try running some of the following tasks:
+solc --abi ./contracts/TripNft.sol -o build --include-path node_modules/ --base-path .
+abigen --abi=./build/TripNft.abi --pkg tripNft --out=tripNft.go
+solc --bin ./contracts/TripNft.sol -o build --include-path node_modules/ --base-path .
+abigen --bin=./build/TripNft.bin --abi=./build/TripNft.abi --pkg=tripNft --out=tripNft.go
 
-```shell
-npx hardhat help
-npx hardhat test
-REPORT_GAS=true npx hardhat test
-npx hardhat node
-npx hardhat run scripts/deploy.ts
-```
+---
+
+to deploy:
+npx hardhat run --network localhost scripts/deploy.ts
