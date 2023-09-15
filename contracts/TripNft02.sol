@@ -8,14 +8,17 @@ import "@openzeppelin/contracts/access/Ownable2Step.sol";
 // Vehicle node owner at time of mint is trip owner
 
 struct SegmentInfo {
-    uint256 vehicleNode;
     address owner;
-    uint256 startHex;
-    uint256 endHex;
-    uint256 startTime;
-    uint256 endTime;
+    uint256 vehicleNode;
+    uint256 tokenId;
     string bundlrId;
-    uint256 tripNum;
+    HexTime start;
+    HexTime end;
+}
+
+struct HexTime {
+    uint64 hexIndex;
+    uint64 time;
 }
 
 contract TripNft02 is ERC721, Ownable2Step {
@@ -24,12 +27,13 @@ contract TripNft02 is ERC721, Ownable2Step {
 
     event SegmentMinted(
         uint256 indexed vehicleNode,
+        uint256 indexed tokenId,
         address indexed owner,
-        string indexed bundlrId,
-        uint256 startHex,
-        uint256 endHex,
-        uint256 startTime,
-        uint256 endTime
+        string bundlrId,
+        uint64 startTime,
+        uint64 endTime,
+        uint64 startHex,
+        uint64 endHex
     );
 
     constructor() ERC721("TripNft02", "TRIP") {
@@ -39,32 +43,31 @@ contract TripNft02 is ERC721, Ownable2Step {
     function mint(
         address to,
         uint256 vehicleNode,
-        uint256 startHex,
-        uint256 endHex,
-        uint256 startTime,
-        uint256 endTime,
-        string calldata bundlrID
+        uint64 startTime,
+        uint64 endTime,
+        uint64 startHex,
+        uint64 endHex,
+        string calldata bundlrId
     ) public onlyOwner {
         tripTokenId++;
         _segmentInfo[tripTokenId] = SegmentInfo(
-            vehicleNode,
             to,
-            startHex,
-            endHex,
-            startTime,
-            endTime,
-            bundlrID,
-            tripTokenId
+            vehicleNode,
+            tripTokenId,
+            bundlrId,
+            HexTime(startHex, startTime),
+            HexTime(endHex, endTime)
         );
         _mint(to, tripTokenId);
         emit SegmentMinted(
             vehicleNode,
+            tripTokenId,
             to,
-            bundlrID,
-            startHex,
-            endHex,
+            bundlrId,
             startTime,
-            endTime
+            endTime,
+            startHex,
+            endHex
         );
     }
 
