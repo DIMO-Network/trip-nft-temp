@@ -14,7 +14,6 @@ contract TripNft is ERC721, Ownable2Step {
     struct SegmentInfo {
         address owner;
         uint256 vehicleNode;
-        uint256 tokenId;
         string bundlrId;
         HexTime start;
         HexTime end;
@@ -53,7 +52,6 @@ contract TripNft is ERC721, Ownable2Step {
         _segmentInfo[tripTokenId] = SegmentInfo(
             to,
             vehicleNode,
-            tripTokenId,
             bundlrId,
             HexTime(startHex, startTime),
             HexTime(endHex, endTime)
