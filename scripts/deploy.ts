@@ -2,7 +2,8 @@ import { ethers } from "hardhat";
 
 async function main() {
   const TripNft = await ethers.getContractFactory("TripNft");
-  await TripNft.deploy();
+  const contract = await TripNft.deploy();
+  console.log("TripNft deployed to: ", await contract.getAddress());
 }
 
 main().catch((error) => {
